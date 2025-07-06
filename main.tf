@@ -67,7 +67,7 @@ resource "azurerm_kubernetes_cluster" "app" {
     type = "SystemAssigned"
   }
 
-  # Network configuration
+  # Network configuration - using kubenet (simpler, no custom networking)
   network_profile {
     network_plugin    = "kubenet"
     load_balancer_sku = "standard"
@@ -76,22 +76,19 @@ resource "azurerm_kubernetes_cluster" "app" {
   # Enable RBAC
   role_based_access_control_enabled = true
 
-  # Azure AD integration (optional but recommended)
-  azure_active_directory_role_based_access_control {
-    managed            = true
-    azure_rbac_enabled = true
-  }
-
   # Add-ons
   # HTTP application routing (not recommended for production)
   http_application_routing_enabled = false
   
   # Enable Azure Policy add-on
-  azure_policy_enabled = true
+  azure_policy_enabled = var.enable_azure_policy
   
-  # Enable monitoring
-  oms_agent {
-    log_analytics_workspace_id = azurerm_log_analytics_workspace.aks.id
+  # Enable monitoring (optional)
+  dynamic "oms_agent" {
+    for_each = var.enable_monitoring ? [1] : []
+    content {
+      log_analytics_workspace_id = azurerm_log_analytics_workspace.aks[0].id
+    }
   }
 
   tags = {
@@ -101,19 +98,16 @@ resource "azurerm_kubernetes_cluster" "app" {
     CreatedBy   = "Terraform"
     Assignment  = "CST8918-H09"
   }
-
-  depends_on = [
-    azurerm_role_assignment.aks_network_contributor
-  ]
 }
 
-# Create Log Analytics Workspace for AKS monitoring
+# Create Log Analytics Workspace for AKS monitoring (optional)
 resource "azurerm_log_analytics_workspace" "aks" {
+  count               = var.enable_monitoring ? 1 : 0
   name                = "law-aks-${var.project_name}-${var.environment}-${random_string.suffix.result}"
   location            = azurerm_resource_group.aks.location
   resource_group_name = azurerm_resource_group.aks.name
   sku                 = "PerGB2018"
-  retention_in_days   = 30
+  retention_in_days   = var.log_analytics_retention_days
 
   tags = {
     Environment = var.environment
@@ -122,35 +116,4 @@ resource "azurerm_log_analytics_workspace" "aks" {
     CreatedBy   = "Terraform"
     Assignment  = "CST8918-H09"
   }
-}
-
-# Create a virtual network for AKS (optional, but good practice)
-resource "azurerm_virtual_network" "aks" {
-  name                = "vnet-aks-${var.project_name}-${var.environment}-${random_string.suffix.result}"
-  address_space       = ["10.0.0.0/16"]
-  location            = azurerm_resource_group.aks.location
-  resource_group_name = azurerm_resource_group.aks.name
-
-  tags = {
-    Environment = var.environment
-    Project     = var.project_name
-    Purpose     = "AKS Network"
-    CreatedBy   = "Terraform"
-    Assignment  = "CST8918-H09"
-  }
-}
-
-# Create a subnet for AKS nodes
-resource "azurerm_subnet" "aks" {
-  name                 = "subnet-aks-nodes"
-  resource_group_name  = azurerm_resource_group.aks.name
-  virtual_network_name = azurerm_virtual_network.aks.name
-  address_prefixes     = ["10.0.1.0/24"]
-}
-
-# Assign Network Contributor role to AKS identity
-resource "azurerm_role_assignment" "aks_network_contributor" {
-  scope                = azurerm_virtual_network.aks.id
-  role_definition_name = "Network Contributor"
-  principal_id         = azurerm_kubernetes_cluster.app.identity[0].principal_id
 }

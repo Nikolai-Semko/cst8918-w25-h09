@@ -56,21 +56,10 @@ output "aks_identity_tenant_id" {
   value       = azurerm_kubernetes_cluster.app.identity[0].tenant_id
 }
 
-# Log Analytics workspace
+# Log Analytics workspace (if enabled)
 output "log_analytics_workspace_id" {
-  description = "ID of the Log Analytics workspace used for monitoring"
-  value       = azurerm_log_analytics_workspace.aks.id
-}
-
-# Network information
-output "virtual_network_id" {
-  description = "ID of the virtual network used by the AKS cluster"
-  value       = azurerm_virtual_network.aks.id
-}
-
-output "subnet_id" {
-  description = "ID of the subnet used by AKS nodes"
-  value       = azurerm_subnet.aks.id
+  description = "ID of the Log Analytics workspace used for monitoring (if enabled)"
+  value       = var.enable_monitoring ? azurerm_log_analytics_workspace.aks[0].id : null
 }
 
 # Instructions for connecting to the cluster
