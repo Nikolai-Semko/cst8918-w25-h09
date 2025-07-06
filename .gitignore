@@ -1,0 +1,61 @@
+# Terraform files
+*.tfstate
+*.tfstate.*
+*.tfplan
+*.tfvars.backup
+.terraform/
+.terraform.lock.hcl
+terraform.tfstate.backup
+crash.log
+crash.*.log
+
+# Kubeconfig files (sensitive)
+kubeconfig
+*.kubeconfig
+kube_config
+.kube/
+
+# Azure CLI files
+.azure/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+
+# Sensitive information
+*.pem
+*.key
+secrets.yaml
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Backup files
+*.backup
+*.bak
+
+# Kubernetes temporary files
+*.yaml.tmp
+*.yml.tmp
