@@ -1,0 +1,56 @@
+{
+  "name": "cst8918-w25-h09",
+  "version": "1.0.0",
+  "description": "CST8918 H09 Assignment - Azure Kubernetes Service (AKS) Cluster with Terraform",
+  "main": "index.js",
+  "scripts": {
+    "deploy": "terraform init && terraform plan && terraform apply",
+    "destroy": "terraform destroy",
+    "plan": "terraform plan",
+    "init": "terraform init",
+    "validate": "terraform validate",
+    "fmt": "terraform fmt -recursive",
+    "kubectl:config": "terraform output -raw kube_config > ./kubeconfig && export KUBECONFIG=./kubeconfig",
+    "kubectl:nodes": "kubectl get nodes",
+    "kubectl:pods": "kubectl get pods",
+    "kubectl:services": "kubectl get services",
+    "app:deploy": "kubectl apply -f sample-app.yaml",
+    "app:delete": "kubectl delete -f sample-app.yaml",
+    "app:status": "kubectl get pods && kubectl get services",
+    "logs:store-front": "kubectl logs -f deployment/store-front",
+    "logs:order-service": "kubectl logs -f deployment/order-service",
+    "logs:product-service": "kubectl logs -f deployment/product-service",
+    "logs:rabbitmq": "kubectl logs -f deployment/rabbitmq",
+    "scale:up": "kubectl scale deployment store-front --replicas=3",
+    "scale:down": "kubectl scale deployment store-front --replicas=1",
+    "test:connectivity": "kubectl run test-pod --image=busybox --rm -it -- /bin/sh",
+    "port-forward": "kubectl port-forward service/store-front 8080:80",
+    "cleanup": "kubectl delete -f sample-app.yaml && terraform destroy -auto-approve"
+  },
+  "keywords": [
+    "azure",
+    "kubernetes",
+    "aks",
+    "terraform",
+    "devops",
+    "infrastructure-as-code",
+    "cst8918",
+    "assignment"
+  ],
+  "author": "CST8918 Student",
+  "license": "MIT",
+  "devDependencies": {},
+  "dependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/YOUR_USERNAME/cst8918-w25-h09.git"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "os": [
+    "linux",
+    "darwin",
+    "win32"
+  ]
+}
