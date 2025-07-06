@@ -45,7 +45,7 @@ resource "azurerm_kubernetes_cluster" "app" {
     enable_auto_scaling = true
     
     # Use availability zones for high availability
-    zones = ["1", "2", "3"]
+    # zones = ["1", "2", "3"]
     
     # Node labels
     node_labels = {
