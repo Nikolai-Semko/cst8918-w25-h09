@@ -45,7 +45,7 @@ resource "azurerm_kubernetes_cluster" "app" {
     enable_auto_scaling = true
     
     # Use availability zones for high availability
-    # zones = ["1", "2", "3"]
+    zones = ["1", "2", "3"]
     
     # Node labels
     node_labels = {
@@ -76,43 +76,14 @@ resource "azurerm_kubernetes_cluster" "app" {
   # Enable RBAC
   role_based_access_control_enabled = true
 
-  # Add-ons
-  # HTTP application routing (not recommended for production)
+  # Disable features that might cause permission issues
   http_application_routing_enabled = false
-  
-  # Enable Azure Policy add-on
-  azure_policy_enabled = var.enable_azure_policy
-  
-  # Enable monitoring (optional)
-  dynamic "oms_agent" {
-    for_each = var.enable_monitoring ? [1] : []
-    content {
-      log_analytics_workspace_id = azurerm_log_analytics_workspace.aks[0].id
-    }
-  }
+  azure_policy_enabled            = false
 
   tags = {
     Environment = var.environment
     Project     = var.project_name
     Purpose     = "AKS Cluster"
-    CreatedBy   = "Terraform"
-    Assignment  = "CST8918-H09"
-  }
-}
-
-# Create Log Analytics Workspace for AKS monitoring (optional)
-resource "azurerm_log_analytics_workspace" "aks" {
-  count               = var.enable_monitoring ? 1 : 0
-  name                = "law-aks-${var.project_name}-${var.environment}-${random_string.suffix.result}"
-  location            = azurerm_resource_group.aks.location
-  resource_group_name = azurerm_resource_group.aks.name
-  sku                 = "PerGB2018"
-  retention_in_days   = var.log_analytics_retention_days
-
-  tags = {
-    Environment = var.environment
-    Project     = var.project_name
-    Purpose     = "AKS Monitoring"
     CreatedBy   = "Terraform"
     Assignment  = "CST8918-H09"
   }

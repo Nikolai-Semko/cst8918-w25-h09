@@ -56,12 +56,6 @@ output "aks_identity_tenant_id" {
   value       = azurerm_kubernetes_cluster.app.identity[0].tenant_id
 }
 
-# Log Analytics workspace (if enabled)
-output "log_analytics_workspace_id" {
-  description = "ID of the Log Analytics workspace used for monitoring (if enabled)"
-  value       = var.enable_monitoring ? azurerm_log_analytics_workspace.aks[0].id : null
-}
-
 # Instructions for connecting to the cluster
 output "kubectl_connection_command" {
   description = "Command to save kubeconfig and connect to the cluster"
