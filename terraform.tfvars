@@ -1,8 +1,8 @@
 # Terraform variables for AKS cluster deployment
 # CST8918 - H09 Assignment
 
-# Azure region for resources
-location = "West US 2"
+# Azure region for resources (using East US for better compatibility)
+location = "East US"
 
 # Environment designation
 environment = "dev"
@@ -10,8 +10,8 @@ environment = "dev"
 # Project name for resource naming
 project_name = "aks-store"
 
-# Kubernetes version (use latest stable)
-kubernetes_version = "1.28.3"
+# Kubernetes version (use latest stable version for Free tier)
+kubernetes_version = "1.33.1"
 
 # Node configuration as per assignment requirements
 node_count     = 2           # Initial number of nodes
@@ -24,12 +24,5 @@ vm_size = "Standard_B2s"
 # Enable auto-scaling
 enable_auto_scaling = true
 
-# Monitoring and policy
-enable_monitoring    = true
-enable_azure_policy  = true
-
-# Network configuration
+# Network configuration (simple)
 network_plugin = "kubenet"
-
-# Log Analytics retention
-log_analytics_retention_days = 30

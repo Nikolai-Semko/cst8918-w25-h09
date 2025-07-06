@@ -32,7 +32,7 @@ resource "azurerm_kubernetes_cluster" "app" {
   dns_prefix          = "aks-${var.project_name}-${random_string.suffix.result}"
   
   # Use the latest Kubernetes version
-  kubernetes_version = var.kubernetes_version
+  # kubernetes_version = var.kubernetes_version
 
   # Default node pool configuration
   default_node_pool {
@@ -45,7 +45,7 @@ resource "azurerm_kubernetes_cluster" "app" {
     enable_auto_scaling = true
     
     # Use availability zones for high availability
-    zones = ["1", "2", "3"]
+    # zones = ["1", "2", "3"]
     
     # Node labels
     node_labels = {
