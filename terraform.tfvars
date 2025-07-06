@@ -2,7 +2,7 @@
 # CST8918 - H09 Assignment
 
 # Azure region for resources
-location = "East US"
+location = "West US 2"
 
 # Environment designation
 environment = "dev"
